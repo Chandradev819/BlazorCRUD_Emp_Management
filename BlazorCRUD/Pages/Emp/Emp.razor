@@ -1,0 +1,60 @@
+﻿@page "/emp"
+@using BlazorCRUD.Data
+@inject EmpService objEmpService
+
+    <NavLink class="nav-link" href="AddEmp">
+        <span class="oi oi-plus" aria-hidden="true"></span> Add New
+        
+    </NavLink>
+
+<h4>Emp Details</h4>
+@if (objEmp == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                @*<th>Emp Id</th>*@
+                <th>Name</th>
+                <th>Gender</th>
+                <th>Country</th>
+                <th>City</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var emp in objEmp)
+            {
+                <tr>
+                    @*<td><input type="hidden" @bind="@emp.EmpId"></td>*@
+                    @*<td>@emp.EmpId</td>*@
+                    <td>@emp.Name</td>
+                    <td>@emp.Gender</td>
+                    <td>@emp.Country</td>
+                    <td>@emp.City</td>
+                    <td>
+                        <a class="btn btn-warning" href="EditEmp/@emp.EmpId">
+                            Edit 
+                        </a>
+                        <a class="btn btn-danger" href="DeleteEmp/@emp.EmpId">
+                           Delete
+                        </a>
+                      
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    List<EmployeeInfo> objEmp;
+    protected override async Task OnInitializedAsync()
+    {
+        objEmp = await Task.Run(() => objEmpService.GetEmp());
+    }
+
+}
