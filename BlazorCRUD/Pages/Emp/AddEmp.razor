@@ -3,33 +3,39 @@
 @inject EmpService objEmpService
 @inject NavigationManager objNavigationManager
 
+
 <h2>Add Employee</h2>
 <hr />
 
-<EditForm Model="@objEmp" Context="formContext" OnValidSubmit="CreateEmp">
-    <DataAnnotationsValidator />
-        <ValidationSummary />
+<EditForm Model="@objEmp" OnValidSubmit="CreateEmp">
+    <FluentValidator TValidator="EmpValidator"/>
+    @*<DataAnnotationsValidator />
+    <ValidationSummary />*@
     <div class="row">
         <div class="col-md-8">
             <div class="form-group">
                 <label for="Name" class="control-label">Name</label>
-                <input form="Name" class="form-control" @bind-value="@objEmp.Name" />
+                <InputText id="Name" class="form-control" @bind-Value="@objEmp.Name" />
+                <ValidationMessage For="@(()=> objEmp.Name)" />
             </div>
             <div class="form-group">
                 <label for="Name" class="control-label">Gender</label>
-                <select @bind="@objEmp.Gender" class="form-control">
+                <InputSelect class="form-control"  id="Gender" @bind-Value="@objEmp.Gender">
                     <option value="">Select</option>
                     <option value="Male">Male</option>
                     <option value="Female">Female</option>
-                </select>
+                </InputSelect>
+                <ValidationMessage For="@(()=> objEmp.Gender)" />
             </div>
             <div class="form-group">
                 <label for="Country" class="control-label">Country</label>
-                <input form="Country" class="form-control" @bind-value="@objEmp.Country" />
+                <InputText id="Country" class="form-control" @bind-Value="@objEmp.Country" />
+                <ValidationMessage For="@(()=> objEmp.Country)" />
             </div>
             <div class="form-group">
                 <label for="City" class="control-label">City</label>
-                <input form="City" class="form-control" @bind-value="@objEmp.City" />
+                <InputText id="City" class="form-control" @bind-Value="@objEmp.City" />
+                <ValidationMessage For="@(()=> objEmp.City)" />
             </div>
         </div>
 
@@ -38,24 +44,22 @@
         <div class="col-md-4">
             <div class="form-group">
                 <button type="submit" class="btn btn-primary">Save</button>
-        <button type="submit" class="btn btn-primary" @onclick="@(() => Cancel())">Cancel</button>
-                
+                    <button type="submit" class="btn btn-primary" @onclick="@(() => Cancel())">Cancel</button>
             </div>
-
         </div>
     </div>
 </EditForm>
 
-    @code {
-        EmployeeInfo objEmp = new EmployeeInfo();
-        protected void CreateEmp()
-        {
-            objEmpService.Create(objEmp);
-            objNavigationManager.NavigateTo("Emp");
-        }
-        void Cancel()
-        {
-            objNavigationManager.NavigateTo("Emp");
-        }
-        
+@code {
+    EmployeeInfo objEmp = new EmployeeInfo();
+    protected void CreateEmp()
+    {
+        objEmpService.Create(objEmp);
+        objNavigationManager.NavigateTo("Emp");
     }
+    void Cancel()
+    {
+        objNavigationManager.NavigateTo("Emp");
+    }
+
+}

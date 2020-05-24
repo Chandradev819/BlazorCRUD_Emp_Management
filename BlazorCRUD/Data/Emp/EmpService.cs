@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,7 +15,8 @@ namespace BlazorCRUD.Data
         }
         public List<EmployeeInfo> GetEmp()
         {
-            var empList = _db.Emp.ToList();
+            //To avoid not fetching from Cache memeory
+            var empList = _db.Emp.AsNoTracking().ToList();
             return empList;
         }
         public string Create(EmployeeInfo objEmp)
@@ -26,7 +28,7 @@ namespace BlazorCRUD.Data
 
         public EmployeeInfo GetEmpById(int id)
         {
-            EmployeeInfo employee = _db.Emp.FirstOrDefault(s => s.EmpId == id);
+            EmployeeInfo employee = _db.Emp.AsNoTracking().FirstOrDefault(s => s.EmpId == id);
             return employee;
         }
 
