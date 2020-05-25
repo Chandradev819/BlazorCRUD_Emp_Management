@@ -1,12 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System;
+﻿using BlazorCRUD.ViewModel;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace BlazorCRUD.Data
 {
-    public class EmpService
+    public class EmpService : IEmpService
     {
         private readonly ApplicationDbContext _db;
         public EmpService(ApplicationDbContext db)
@@ -43,6 +42,26 @@ namespace BlazorCRUD.Data
             _db.Remove(objEmpInfo);
             _db.SaveChanges();
             return "Data has been deleted";
+        }
+
+        //For Custom Pagination
+        public PaginatedEmpsViewModel<EmployeeInfo> GetEmpsPaginated(int pageSize = 10, int pageIndex = 0)
+        {
+            var emps = _db.Emp.AsNoTracking().ToList();
+
+            var itemsOnPage = emps
+                .OrderBy(c => c.EmpId)
+                .Skip(pageSize * pageIndex)
+                .Take(pageSize)
+                .ToList();
+
+            return new PaginatedEmpsViewModel<EmployeeInfo>(
+                pageIndex, pageSize, emps.Count, itemsOnPage);
+        }
+
+        public void Dispose()
+        {
+            _db.Dispose();
         }
     }
 }

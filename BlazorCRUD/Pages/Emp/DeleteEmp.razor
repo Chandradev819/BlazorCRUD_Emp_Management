@@ -1,6 +1,6 @@
 ﻿@page "/DeleteEmp/{CurrentID}"
 @using BlazorCRUD.Data;
-@inject EmpService objEmpService
+@inject IEmpService EmpService 
 @inject NavigationManager objNavigationManager
 
 
@@ -49,11 +49,11 @@
 
     protected override async Task OnInitializedAsync()
     {
-        objEmp = await Task.Run(() => objEmpService.GetEmpById(Convert.ToInt32(CurrentID)));
+        objEmp = await Task.Run(() => EmpService.GetEmpById(Convert.ToInt32(CurrentID)));
     }
     protected void DeleteEmpInfo()
     {
-        objEmpService.DeleteEmp(objEmp);
+        EmpService.DeleteEmp(objEmp);
         objNavigationManager.NavigateTo("Emp");
     }
     void Cancel()

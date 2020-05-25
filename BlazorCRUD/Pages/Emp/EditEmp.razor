@@ -1,6 +1,6 @@
 ﻿@page "/EditEmp/{CurrentID}"
 @using BlazorCRUD.Data;
-@inject EmpService objEmpService
+@inject IEmpService EmpService
 @inject NavigationManager objNavigationManager
 
 <h2>Update Employee</h2>
@@ -56,11 +56,11 @@
     protected override async Task OnInitializedAsync()
     {
         ButtonName = "Update";
-        objEmp = await Task.Run(() =>objEmpService.GetEmpById(Convert.ToInt32(CurrentID)));
+        objEmp = await Task.Run(() =>EmpService.GetEmpById(Convert.ToInt32(CurrentID)));
     }
     protected void UpdateEmp()
     {
-        objEmpService.UpdateEmp(objEmp);
+        EmpService.UpdateEmp(objEmp);
         objNavigationManager.NavigateTo("Emp");
     }
     protected void Cancel()

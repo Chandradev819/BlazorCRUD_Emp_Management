@@ -1,16 +1,17 @@
 ﻿@page "/AddEmp"
 @using BlazorCRUD.Data;
-@inject EmpService objEmpService
+@using Microsoft.Extensions.Logging;
+@inject IEmpService EmpService
 @inject NavigationManager objNavigationManager
+@inject ILogger<AddEmp> Logger 
+
 
 
 <h2>Add Employee</h2>
 <hr />
 
 <EditForm Model="@objEmp" OnValidSubmit="CreateEmp">
-    <FluentValidator TValidator="EmpValidator"/>
-    @*<DataAnnotationsValidator />
-    <ValidationSummary />*@
+    <FluentValidator TValidator="EmpValidator" />
     <div class="row">
         <div class="col-md-8">
             <div class="form-group">
@@ -20,7 +21,7 @@
             </div>
             <div class="form-group">
                 <label for="Name" class="control-label">Gender</label>
-                <InputSelect class="form-control"  id="Gender" @bind-Value="@objEmp.Gender">
+                <InputSelect class="form-control" id="Gender" @bind-Value="@objEmp.Gender">
                     <option value="">Select</option>
                     <option value="Male">Male</option>
                     <option value="Female">Female</option>
@@ -44,7 +45,7 @@
         <div class="col-md-4">
             <div class="form-group">
                 <button type="submit" class="btn btn-primary">Save</button>
-                    <button type="submit" class="btn btn-primary" @onclick="@(() => Cancel())">Cancel</button>
+                <button type="submit" class="btn btn-primary" @onclick="@(() => Cancel())">Cancel</button>
             </div>
         </div>
     </div>
@@ -54,8 +55,11 @@
     EmployeeInfo objEmp = new EmployeeInfo();
     protected void CreateEmp()
     {
-        objEmpService.Create(objEmp);
+        Logger.LogInformation("CreateEmp() Loaded"); 
+        EmpService.Create(objEmp);
         objNavigationManager.NavigateTo("Emp");
+        Logger.LogInformation("CreateEmp() Completed"); 
+
     }
     void Cancel()
     {

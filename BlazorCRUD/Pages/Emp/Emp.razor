@@ -1,60 +1,109 @@
-﻿@page "/emp"
+﻿@page "/"
+@page "/emp"
 @using BlazorCRUD.Data
-@inject EmpService objEmpService
+@using BlazorCRUD.ViewModel
+@inject IEmpService EmpService
 
-    <NavLink class="nav-link" href="AddEmp">
-        <span class="oi oi-plus" aria-hidden="true"></span> Add New
-        
-    </NavLink>
+<NavLink class="nav-link" href="AddEmp">
+    <span class="oi oi-plus" aria-hidden="true"></span> Add New
+</NavLink>
 
 <h4>Emp Details</h4>
-@if (objEmp == null)
-{
-    <p><em>Loading...</em></p>
-}
-else
-{
-    <table class="table table-striped">
-        <thead>
+<div>
+    @if (paginatedEmps == null || !paginatedEmps.Data.Any())
+    {
+        <table>
             <tr>
-                @*<th>Emp Id</th>*@
-                <th>Name</th>
-                <th>Gender</th>
-                <th>Country</th>
-                <th>City</th>
-                <th>Action</th>
+                <td>No data was returned.</td>
             </tr>
-        </thead>
-        <tbody>
-            @foreach (var emp in objEmp)
-            {
+        </table>
+    }
+    else
+    {
+        <table class="table table-striped">
+            <thead>
                 <tr>
-                    @*<td><input type="hidden" @bind="@emp.EmpId"></td>*@
-                    @*<td>@emp.EmpId</td>*@
-                    <td>@emp.Name</td>
-                    <td>@emp.Gender</td>
-                    <td>@emp.Country</td>
-                    <td>@emp.City</td>
-                    <td>
-                        <a class="btn btn-warning" href="EditEmp/@emp.EmpId">
-                            Edit 
-                        </a>
-                        <a class="btn btn-danger" href="DeleteEmp/@emp.EmpId">
-                           Delete
-                        </a>
-                      
-                    </td>
+                    @*<th>Emp Id</th>*@
+                    <th>Name</th>
+                    <th>Gender</th>
+                    <th>Country</th>
+                    <th>City</th>
+                    <th>Action</th>
                 </tr>
-            }
-        </tbody>
-    </table>
-}
+            </thead>
+            <tbody>
+                @foreach (var emp in paginatedEmps.Data)
+                {
+                    <tr>
+                        @*<td><input type="hidden" @bind="@emp.EmpId"></td>*@
+                        @*<td>@emp.EmpId</td>*@
+                        <td>@emp.Name</td>
+                        <td>@emp.Gender</td>
+                        <td>@emp.Country</td>
+                        <td>@emp.City</td>
+                        <td>
+                            <a class="btn btn-warning" href="EditEmp/@emp.EmpId">
+                                Edit
+                            </a>
+                            <a class="btn btn-danger" href="DeleteEmp/@emp.EmpId">
+                                Delete
+                            </a>
+
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
+<div class="esh-pager">
+    <div class="container">
+        <article class="esh-pager-wrapper row">
+            <nav>
+                @if (pageIndex > 0)
+                {
+                    <a @onclick="Previous" class="esh-pager-item esh-pager-item--navigable">
+                        Previous
+                    </a>
+                }
+                <span class="esh-pager-item">
+                    Showing @paginatedEmps.ItemsPerPage of @paginatedEmps.TotalItems products - Page @(paginatedEmps.ActualPage + 1) - @paginatedEmps.TotalPages
+                </span>
+
+                @if (pageIndex < paginatedEmps.TotalPages - 1)
+                {
+                    <a @onclick="Next" class="esh-pager-item esh-pager-item--navigable">
+                        Next
+                    </a>
+                }
+            </nav>
+        </article>
+    </div>
+</div>
 
 @code {
-    List<EmployeeInfo> objEmp;
-    protected override async Task OnInitializedAsync()
+
+    int pageSize = 5;
+    int pageIndex = 0;
+    PaginatedEmpsViewModel<EmployeeInfo> paginatedEmps;
+
+    protected override void OnParametersSet() => LoadPage();
+
+    void Previous()
     {
-        objEmp = await Task.Run(() => objEmpService.GetEmp());
+        pageIndex--;
+        LoadPage();
+    }
+
+    void Next()
+    {
+        pageIndex++;
+        LoadPage();
+    }
+
+    void LoadPage()
+    {
+        paginatedEmps = EmpService.GetEmpsPaginated(pageSize, pageIndex);
     }
 
 }

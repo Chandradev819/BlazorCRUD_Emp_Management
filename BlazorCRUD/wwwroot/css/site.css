@@ -180,4 +180,29 @@ app {
         /* Never collapse the sidebar for wide screens */
         display: block;
     }
+
+    /*Pager*/
+    .esh-pager-wrapper {
+        padding-top: 1rem;
+        text-align: center;
+    }
+
+    .esh-pager-item {
+        margin: 0 5vw;
+        color: #333333;
+    }
+
+    .esh-pager-item--hidden {
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .esh-pager-item--navigable {
+        cursor: pointer;
+        display: inline-block;
+    }
+
+        .esh-pager-item--navigable:hover {
+            color: #83D01B;
+        }
 }
