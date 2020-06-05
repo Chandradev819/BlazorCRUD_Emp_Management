@@ -1,8 +1,7 @@
 ﻿@page "/DeleteEmp/{CurrentID}"
-@using BlazorCRUD.Data;
-@inject IEmpService EmpService 
+@inject IEmpService EmpService
 @inject NavigationManager objNavigationManager
-
+@inject ILogger<DeleteEmp> Logger
 
 <h2>Delete Employee</h2>
 <hr />
@@ -53,8 +52,16 @@
     }
     protected void DeleteEmpInfo()
     {
-        EmpService.DeleteEmp(objEmp);
-        objNavigationManager.NavigateTo("Emp");
+        try
+        {
+            EmpService.DeleteEmp(objEmp);
+            objNavigationManager.NavigateTo("Emp");
+        }
+        catch (Exception ex)
+        {
+            Logger.LogInformation(ex.StackTrace);
+        }
+
     }
     void Cancel()
     {

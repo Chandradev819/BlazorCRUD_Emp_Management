@@ -1,11 +1,7 @@
 ﻿@page "/AddEmp"
-@using BlazorCRUD.Data;
-@using Microsoft.Extensions.Logging;
 @inject IEmpService EmpService
 @inject NavigationManager objNavigationManager
 @inject ILogger<AddEmp> Logger 
-
-
 
 <h2>Add Employee</h2>
 <hr />
@@ -55,10 +51,18 @@
     EmployeeInfo objEmp = new EmployeeInfo();
     protected void CreateEmp()
     {
-        Logger.LogInformation("CreateEmp() Loaded"); 
-        EmpService.Create(objEmp);
-        objNavigationManager.NavigateTo("Emp");
-        Logger.LogInformation("CreateEmp() Completed"); 
+        try
+        {
+            EmpService.Create(objEmp);
+            objNavigationManager.NavigateTo("Emp");
+
+        }
+        catch (Exception ex)
+        {
+
+            Logger.LogInformation(ex.StackTrace);
+        }
+
 
     }
     void Cancel()

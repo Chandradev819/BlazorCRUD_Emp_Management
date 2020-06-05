@@ -1,7 +1,7 @@
 ﻿@page "/EditEmp/{CurrentID}"
-@using BlazorCRUD.Data;
 @inject IEmpService EmpService
 @inject NavigationManager objNavigationManager
+@inject ILogger<EditEmp> Logger
 
 <h2>Update Employee</h2>
 <hr />
@@ -46,17 +46,24 @@
     </div>
 </EditForm>
 
-
 @code {
     [Parameter]
-    public string CurrentID { get; set; } 
+    public string CurrentID { get; set; }
     public string ButtonName { get; set; }
     EmployeeInfo objEmp = new EmployeeInfo();
 
     protected override async Task OnInitializedAsync()
     {
-        ButtonName = "Update";
-        objEmp = await Task.Run(() =>EmpService.GetEmpById(Convert.ToInt32(CurrentID)));
+        try
+        {
+            ButtonName = "Update";
+            objEmp = await Task.Run(() => EmpService.GetEmpById(Convert.ToInt32(CurrentID)));
+        }
+        catch (Exception ex)
+        {
+            Logger.LogInformation(ex.Message);
+        }
+
     }
     protected void UpdateEmp()
     {
@@ -66,7 +73,7 @@
     protected void Cancel()
     {
         objNavigationManager.NavigateTo("/Emp");
-        
+
     }
-    
+
 }
